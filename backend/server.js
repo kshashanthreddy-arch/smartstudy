@@ -35,11 +35,21 @@ app.use(cors({
 app.use(express.json());
 
 app.get('/', (_req, res) => res.json({ status: 'ok', message: 'SmartStudy API is active.', health: '/api/health' }));
+app.get('/health', (_req, res) => res.json({ status: 'ok', app: 'SmartStudy API' }));
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', app: 'SmartStudy API' }));
+
+// Mount routes on both /api and direct root prefixes to prevent 404 errors
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
 app.use('/api/subjects', subjectRoutes);
+app.use('/subjects', subjectRoutes);
+
 app.use('/api/tasks', taskRoutes);
+app.use('/tasks', taskRoutes);
+
 app.use('/api/exams', examRoutes);
+app.use('/exams', examRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

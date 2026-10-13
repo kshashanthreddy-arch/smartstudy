@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || 'https://smartstudy-kfsj.onrender.com/api';
+const rawUrl = (import.meta.env.VITE_API_URL || 'https://smartstudy-kfsj.onrender.com/api').trim().replace(/\/+$/, '');
+const API_URL = rawUrl.endsWith('/api') ? rawUrl : `${rawUrl}/api`;
 
 export async function api(path, options = {}) {
   const token = localStorage.getItem('smartstudy_token');
