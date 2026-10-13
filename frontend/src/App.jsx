@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarDays, CheckCircle2, Circle, Clock3, LayoutDashboard, LogOut, Plus, Trash2, Target, Timer, GraduationCap } from 'lucide-react';
 import { api } from './api';
 
