@@ -8,9 +8,33 @@ import taskRoutes from './routes/tasks.js';
 import examRoutes from './routes/exams.js';
 
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+const configuredOrigins = process.env.CLIENT_URL 
+  ? process.env.CLIENT_URL.split(',').map(url => url.trim())
+  : [];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like health checks, Postman, curl)
+    if (!origin) return callback(null, true);
+
+    // Allow configured origins, localhost, or any vercel.app domain
+    if (
+      configuredOrigins.includes(origin) ||
+      origin.startsWith('http://localhost:') ||
+      origin.startsWith('http://127.0.0.1:') ||
+      origin.endsWith('.vercel.app') ||
+      configuredOrigins.length === 0
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 
+app.get('/', (_req, res) => res.json({ status: 'ok', message: 'SmartStudy API is active.', health: '/api/health' }));
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', app: 'SmartStudy API' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/subjects', subjectRoutes);
